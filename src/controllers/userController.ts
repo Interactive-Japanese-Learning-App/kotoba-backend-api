@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-import Admin from "../models/Admin";
+import User from "../models/User";
 
 import {
   emailRegex,
@@ -10,9 +10,9 @@ import {
 } from "../utils/validators";
 
 //
-// REGISTER ADMIN
+// REGISTER USER
 //
-export const registerAdmin = async (
+export const registerUser = async (
   req: Request,
   res: Response
 ) => {
@@ -23,20 +23,17 @@ export const registerAdmin = async (
       password,
     } = req.body;
 
-    //
-    // VALIDATION
-    //
-    if (!email || !password) {
+    if (
+      !email ||
+      !password
+    ) {
       return res.status(400).json({
         success: false,
         message:
-          "Email and password are required",
+          "All fields are required",
       });
     }
 
-    //
-    // EMAIL FORMAT
-    //
     if (!emailRegex.test(email)) {
       return res.status(400).json({
         success: false,
@@ -45,9 +42,6 @@ export const registerAdmin = async (
       });
     }
 
-    //
-    // PASSWORD FORMAT
-    //
     if (!passwordRegex.test(password)) {
       return res.status(400).json({
         success: false,
@@ -56,30 +50,21 @@ export const registerAdmin = async (
       });
     }
 
-    //
-    // CHECK EXISTING ADMIN
-    //
-    const existingAdmin =
-      await Admin.findOne({ email });
+    const existingUser =
+      await User.findOne({ email });
 
-    if (existingAdmin) {
+    if (existingUser) {
       return res.status(400).json({
         success: false,
         message:
-          "Admin already exists",
+          "User already exists",
       });
     }
 
-    //
-    // HASH PASSWORD
-    //
     const hashedPassword =
       await bcrypt.hash(password, 10);
 
-    //
-    // CREATE ADMIN
-    //
-    const admin = await Admin.create({
+    const user = await User.create({
       email,
       password: hashedPassword,
     });
@@ -88,11 +73,9 @@ export const registerAdmin = async (
       success: true,
       message:
         "Register success",
-      admin: {
-        _id: admin._id,
-        email: admin.email,
-        createdAt:
-          admin.createdAt,
+      user: {
+        _id: user._id,
+        email: user.email,
       },
     });
 
@@ -110,9 +93,9 @@ export const registerAdmin = async (
 };
 
 //
-// LOGIN ADMIN
+// LOGIN USER
 //
-export const loginAdmin = async (
+export const loginUser = async (
   req: Request,
   res: Response
 ) => {
@@ -123,10 +106,10 @@ export const loginAdmin = async (
       password,
     } = req.body;
 
-    //
-    // VALIDATION
-    //
-    if (!email || !password) {
+    if (
+      !email ||
+      !password
+    ) {
       return res.status(400).json({
         success: false,
         message:
@@ -134,27 +117,21 @@ export const loginAdmin = async (
       });
     }
 
-    //
-    // FIND ADMIN
-    //
-    const admin =
-      await Admin.findOne({ email });
+    const user =
+      await User.findOne({ email });
 
-    if (!admin) {
+    if (!user) {
       return res.status(404).json({
         success: false,
         message:
-          "Admin not found",
+          "User not found",
       });
     }
 
-    //
-    // CHECK PASSWORD
-    //
     const isMatch =
       await bcrypt.compare(
         password,
-        admin.password
+        user.password
       );
 
     if (!isMatch) {
@@ -165,13 +142,10 @@ export const loginAdmin = async (
       });
     }
 
-    //
-    // GENERATE TOKEN
-    //
     const token = jwt.sign(
       {
-        id: admin._id,
-        role: "admin",
+        id: user._id,
+        role: "user",
       },
       process.env.JWT_SECRET!,
       {
@@ -181,12 +155,10 @@ export const loginAdmin = async (
 
     res.status(200).json({
       success: true,
-      message:
-        "Login success",
       token,
-      admin: {
-        _id: admin._id,
-        email: admin.email,
+      user: {
+        _id: user._id,
+        email: user.email,
       },
     });
 
@@ -204,23 +176,23 @@ export const loginAdmin = async (
 };
 
 //
-// GET ALL ADMINS
+// GET ALL USERS
 //
-export const getAdmins = async (
+export const getUsers = async (
   req: Request,
   res: Response
 ) => {
   try {
 
-    const admins =
-      await Admin.find()
+    const users =
+      await User.find()
         .select("-password");
 
     res.status(200).json({
       success: true,
       total:
-        admins.length,
-      admins,
+        users.length,
+      users,
     });
 
   } catch (error) {
@@ -237,30 +209,30 @@ export const getAdmins = async (
 };
 
 //
-// GET ADMIN BY ID
+// GET USER BY ID
 //
-export const getAdminById = async (
+export const getUserById = async (
   req: Request,
   res: Response
 ) => {
   try {
 
-    const admin =
-      await Admin.findById(
+    const user =
+      await User.findById(
         req.params.id
       ).select("-password");
 
-    if (!admin) {
+    if (!user) {
       return res.status(404).json({
         success: false,
         message:
-          "Admin not found",
+          "User not found",
       });
     }
 
     res.status(200).json({
       success: true,
-      admin,
+      user,
     });
 
   } catch (error) {
@@ -277,9 +249,9 @@ export const getAdminById = async (
 };
 
 //
-// UPDATE ADMIN (PUT)
+// UPDATE USER (PUT)
 //
-export const updateAdmin = async (
+export const updateUser = async (
   req: Request,
   res: Response
 ) => {
@@ -292,9 +264,6 @@ export const updateAdmin = async (
 
     const updatedData: any = {};
 
-    //
-    // UPDATE EMAIL
-    //
     if (email) {
 
       if (!emailRegex.test(email)) {
@@ -309,9 +278,6 @@ export const updateAdmin = async (
         email;
     }
 
-    //
-    // UPDATE PASSWORD
-    //
     if (password) {
 
       if (
@@ -333,8 +299,8 @@ export const updateAdmin = async (
         );
     }
 
-    const admin =
-      await Admin.findByIdAndUpdate(
+    const user =
+      await User.findByIdAndUpdate(
         req.params.id,
         updatedData,
         {
@@ -342,19 +308,19 @@ export const updateAdmin = async (
         }
       ).select("-password");
 
-    if (!admin) {
+    if (!user) {
       return res.status(404).json({
         success: false,
         message:
-          "Admin not found",
+          "User not found",
       });
     }
 
     res.status(200).json({
       success: true,
       message:
-        "Admin updated",
-      admin,
+        "User updated",
+      user,
     });
 
   } catch (error) {
@@ -371,9 +337,9 @@ export const updateAdmin = async (
 };
 
 //
-// PATCH ADMIN
+// PATCH USER
 //
-export const patchAdmin = async (
+export const patchUser = async (
   req: Request,
   res: Response
 ) => {
@@ -382,9 +348,6 @@ export const patchAdmin = async (
     const updates =
       req.body;
 
-    //
-    // EMAIL VALIDATION
-    //
     if (updates.email) {
 
       if (
@@ -400,9 +363,6 @@ export const patchAdmin = async (
       }
     }
 
-    //
-    // PASSWORD VALIDATION
-    //
     if (updates.password) {
 
       if (
@@ -424,8 +384,8 @@ export const patchAdmin = async (
         );
     }
 
-    const admin =
-      await Admin.findByIdAndUpdate(
+    const user =
+      await User.findByIdAndUpdate(
         req.params.id,
         updates,
         {
@@ -433,19 +393,19 @@ export const patchAdmin = async (
         }
       ).select("-password");
 
-    if (!admin) {
+    if (!user) {
       return res.status(404).json({
         success: false,
         message:
-          "Admin not found",
+          "User not found",
       });
     }
 
     res.status(200).json({
       success: true,
       message:
-        "Admin patched",
-      admin,
+        "User patched",
+      user,
     });
 
   } catch (error) {
@@ -462,31 +422,31 @@ export const patchAdmin = async (
 };
 
 //
-// DELETE ADMIN
+// DELETE USER
 //
-export const deleteAdmin = async (
+export const deleteUser = async (
   req: Request,
   res: Response
 ) => {
   try {
 
-    const admin =
-      await Admin.findByIdAndDelete(
+    const user =
+      await User.findByIdAndDelete(
         req.params.id
       );
 
-    if (!admin) {
+    if (!user) {
       return res.status(404).json({
         success: false,
         message:
-          "Admin not found",
+          "User not found",
       });
     }
 
     res.status(200).json({
       success: true,
       message:
-        "Admin deleted",
+        "User deleted",
     });
 
   } catch (error) {

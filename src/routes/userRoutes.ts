@@ -1,14 +1,14 @@
 import express from "express";
 
 import {
-  registerAdmin,
-  loginAdmin,
-  getAdmins,
-  getAdminById,
-  updateAdmin,
-  patchAdmin,
-  deleteAdmin,
-} from "../controllers/authController";
+  registerUser,
+  loginUser,
+  getUsers,
+  getUserById,
+  updateUser,
+  patchUser,
+  deleteUser,
+} from "../controllers/userController";
 
 import {
   verifyToken,
@@ -22,66 +22,66 @@ const router = express.Router();
 
 //
 // ==============================
-// AUTH ADMIN
+// AUTH USER
 // ==============================
 //
 
-// Register Admin
+// Register User
 router.post(
-  "/admin/register",
-  registerAdmin
+  "/user/register",
+  registerUser
 );
 
-// Login Admin
+// Login User
 router.post(
-  "/admin/login",
-  loginAdmin
+  "/user/login",
+  loginUser
 );
 
 //
 // ==============================
-// CRUD ADMIN
+// CRUD USER
 // ==============================
 //
 
-// Get All Admins
+// Get All Users
 router.get(
-  "/admin",
+  "/user",
   verifyToken,
   verifyAdmin,
-  getAdmins
+  getUsers
 );
 
-// Get Admin By ID
+// Get User By ID
 router.get(
-  "/admin/:id",
+  "/user/:id",
   verifyToken,
   verifyAdmin,
-  getAdminById
+  getUserById
 );
 
-// Update Admin (PUT)
+// Update User (PUT)
 router.put(
-  "/admin/:id",
+  "/user/:id",
   verifyToken,
   verifyAdmin,
-  updateAdmin
+  updateUser
 );
 
-// Patch Admin
+// Patch User
 router.patch(
-  "/admin/:id",
+  "/user/:id",
   verifyToken,
   verifyAdmin,
-  patchAdmin
+  patchUser
 );
 
-// Delete Admin
+// Delete User
 router.delete(
-  "/admin/:id",
+  "/user/:id",
   verifyToken,
   verifyAdmin,
-  deleteAdmin
+  deleteUser
 );
 
 export default router;

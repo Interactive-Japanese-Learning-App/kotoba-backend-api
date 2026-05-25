@@ -3,20 +3,20 @@ import mongoose, {
   Document,
 } from "mongoose";
 
-export interface IAdmin
+export interface IUser
   extends Document {
 
   email: string;
   password: string;
-  role: "admin";
+  role: "user";
 
   createdAt: Date;
   updatedAt: Date;
 
 }
 
-const AdminSchema =
-  new Schema<IAdmin>(
+const UserSchema =
+  new Schema<IUser>(
     {
       email: {
         type: String,
@@ -34,8 +34,8 @@ const AdminSchema =
 
       role: {
         type: String,
-        default: "admin",
-        enum: ["admin"],
+        default: "user",
+        enum: ["user"],
       },
     },
     {
@@ -43,8 +43,8 @@ const AdminSchema =
     }
   );
 
-export default mongoose.models.Admin ||
-  mongoose.model<IAdmin>(
-    "Admin",
-    AdminSchema
+export default mongoose.models.User ||
+  mongoose.model<IUser>(
+    "User",
+    UserSchema
   );

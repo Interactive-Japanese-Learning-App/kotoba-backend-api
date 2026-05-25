@@ -1,34 +1,62 @@
 import express from "express";
-import cors from "cors";
 import dotenv from "dotenv";
+import mongoose from "mongoose";
+import cors from "cors";
 
-import connectDB from "./config/db";
+// Routes
 import authRoutes from "./routes/authRoutes";
+import userRoutes from "./routes/userRoutes";
+import accountRoutes from "./routes/accountRoutes";
 
+// Load env
 dotenv.config();
-
-connectDB();
 
 const app = express();
 
+// ======================
+// MIDDLEWARE
+// ======================
 app.use(cors());
-
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-//
+// ======================
 // ROUTES
-//
-app.use("/api", authRoutes);
-
-//
-// TEST API
-//
+// ======================
 app.get("/", (req, res) => {
-  res.send("KOTOBA API Running");
+  res.send("API is running...");
 });
 
-const PORT = process.env.PORT || 3000;
+// AUTH ROUTES
+app.use("/api/auth", authRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+// USER ROUTES (admin manage users)
+app.use("/api/users", userRoutes);
+
+// ACCOUNT ROUTES (logged in user/admin)
+app.use("/api/account", accountRoutes);
+
+// ======================
+// ERROR HANDLING (basic)
+// ======================
+app.use((req, res) => {
+  res.status(404).json({ message: "Route not found" });
 });
+
+// ======================
+// DATABASE + SERVER START
+// ======================
+const PORT = process.env.PORT || 5000;
+
+mongoose
+  .connect(process.env.MONGO_URI as string)
+  .then(() => {
+    console.log("✅ MongoDB Connected");
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("❌ MongoDB connection error:", err);
+  });
