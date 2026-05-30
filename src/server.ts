@@ -3,60 +3,125 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
 
-// Routes
+// ROUTES
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import accountRoutes from "./routes/accountRoutes";
+import learningRoutes from "./routes/learningRoutes";
 
-// Load env
+// LOAD ENV
 dotenv.config();
 
+// EXPRESS APP
 const app = express();
 
-// ======================
+//
+// ==============================
 // MIDDLEWARE
-// ======================
+// ==============================
+//
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// ======================
-// ROUTES
-// ======================
+app.use(express.json());
+
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
+
+//
+// ==============================
+// ROOT ROUTE
+// ==============================
+//
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-// AUTH ROUTES
-app.use("/api/auth", authRoutes);
+//
+// ==============================
+// API ROUTES
+// ==============================
+//
 
-// USER ROUTES (admin manage users)
-app.use("/api/users", userRoutes);
+// AUTH
+app.use(
+  "/api/auth",
+  authRoutes
+);
 
-// ACCOUNT ROUTES (logged in user/admin)
-app.use("/api/account", accountRoutes);
+// USERS
+app.use(
+  "/api/users",
+  userRoutes
+);
 
-// ======================
-// ERROR HANDLING (basic)
-// ======================
+// ACCOUNT
+app.use(
+  "/api/account",
+  accountRoutes
+);
+
+// LEARNING
+app.use(
+  "/api/learning",
+  learningRoutes
+);
+
+//
+// ==============================
+// 404 HANDLER
+// ==============================
+//
 app.use((req, res) => {
-  res.status(404).json({ message: "Route not found" });
+  res.status(404).json({
+    success: false,
+    message: "Route not found",
+  });
 });
 
-// ======================
-// DATABASE + SERVER START
-// ======================
-const PORT = process.env.PORT || 5000;
+//
+// ==============================
+// DATABASE CONNECTION
+// ==============================
+//
+const PORT =
+  process.env.PORT || 5000;
+
+const MONGO_URI =
+  process.env.MONGO_URI;
+
+if (!MONGO_URI) {
+
+  throw new Error(
+    "MONGO_URI is missing in .env"
+  );
+
+}
 
 mongoose
-  .connect(process.env.MONGO_URI as string)
+  .connect(MONGO_URI)
   .then(() => {
-    console.log("✅ MongoDB Connected");
+
+    console.log(
+      "✅ MongoDB Connected"
+    );
 
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on http://localhost:${PORT}`);
+
+      console.log(
+        `🚀 Server running on http://localhost:${PORT}`
+      );
+
     });
+
   })
-  .catch((err) => {
-    console.error("❌ MongoDB connection error:", err);
+  .catch((error) => {
+
+    console.log(
+      "❌ MongoDB Error:",
+      error
+    );
+
   });
