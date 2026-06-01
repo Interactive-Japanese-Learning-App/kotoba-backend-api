@@ -60,21 +60,28 @@ router.get(
   getUserById
 );
 
+// ==============================
+// UPDATE PROFILE USER
+// TANPA ADMIN (UNTUK MOBILE)
+// ==============================
+
 // Update User (PUT)
 router.put(
   "/user/:id",
-  verifyToken,
-  verifyAdmin,
   updateUser
 );
 
 // Patch User
 router.patch(
   "/user/:id",
-  verifyToken,
-  verifyAdmin,
   patchUser
 );
+
+//
+// ==============================
+// DELETE USER
+// ==============================
+//
 
 // Delete User
 router.delete(
