@@ -8,7 +8,14 @@ export interface IUser
 
   email: string;
   password: string;
+
   role: "user";
+
+  isVerified: boolean;
+
+  otpCode?: string | null;
+
+  otpExpiredAt?: Date | null;
 
   createdAt: Date;
   updatedAt: Date;
@@ -36,6 +43,20 @@ const UserSchema =
         type: String,
         default: "user",
         enum: ["user"],
+      },
+      isVerified: {
+        type: Boolean,
+        default: false,
+      },
+
+      otpCode: {
+        type: String,
+        default: null,
+      },
+
+      otpExpiredAt: {
+        type: Date,
+        default: null,
       },
     },
     {

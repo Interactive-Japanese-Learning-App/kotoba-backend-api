@@ -8,6 +8,8 @@ import {
   updateUser,
   patchUser,
   deleteUser,
+  verifyOtp,
+  resendOtp,
 } from "../controllers/userController";
 
 import {
@@ -30,6 +32,16 @@ const router = express.Router();
 router.post(
   "/user/register",
   registerUser
+);
+router.post(
+  "/verify-otp",
+  verifyOtp
+);
+
+// Resend OTP
+router.post(
+  "/resend-otp",
+  resendOtp
 );
 
 // Login User
