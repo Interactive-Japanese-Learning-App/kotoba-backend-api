@@ -135,6 +135,182 @@ export const registerUser = async (
 
   }
 };
+// FORGOT PASSWORD
+export const forgotPassword = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+
+    const { email } = req.body;
+
+    const user = await User.findOne({
+      email,
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User tidak ditemukan",
+      });
+    }
+
+    const otp = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
+
+    user.otpCode = otp;
+
+    user.otpExpiredAt = new Date(
+      Date.now() + 5 * 60 * 1000
+    );
+
+    await user.save();
+
+    await sendOtpEmail(
+      email,
+      otp
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "OTP berhasil dikirim",
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+
+  }
+};
+export const verifyResetOtp = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+
+    const {
+      email,
+      otp,
+    } = req.body;
+
+    const user = await User.findOne({
+      email,
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User tidak ditemukan",
+      });
+    }
+
+    if (user.otpCode !== otp) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP salah",
+      });
+    }
+
+    if (
+      !user.otpExpiredAt ||
+      user.otpExpiredAt < new Date()
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP kadaluarsa",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "OTP valid",
+    });
+
+  } catch (error) {
+
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+
+  }
+};
+export const resetPassword = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+
+    const {
+      email,
+      otp,
+      password,
+    } = req.body;
+
+    const user = await User.findOne({
+      email,
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User tidak ditemukan",
+      });
+    }
+    if (user.otpCode !== otp) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP salah",
+      });
+    }
+
+    if (
+      !user.otpExpiredAt ||
+      user.otpExpiredAt < new Date()
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP kadaluarsa",
+      });
+    }
+
+    const hashedPassword =
+      await bcrypt.hash(
+        password,
+        10
+      );
+
+    user.password =
+      hashedPassword;
+
+    user.otpCode = null;
+
+    user.otpExpiredAt = null;
+
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message:
+        "Password berhasil diubah",
+    });
+
+  } catch (error) {
+
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+
+  }
+};
+
 
 // RESEND OTP
 export const resendOtp = async (
@@ -631,6 +807,6 @@ export const verifyOtp = async (
       message:
         "Server error",
     });
-
   }
+
 };

@@ -10,6 +10,9 @@ import {
   deleteUser,
   verifyOtp,
   resendOtp,
+  resetPassword,
+  verifyResetOtp,
+  forgotPassword,
 } from "../controllers/userController";
 
 import {
@@ -101,6 +104,22 @@ router.delete(
   verifyToken,
   verifyAdmin,
   deleteUser
+);
+
+// Lupa password
+router.post(
+  "/forgot-password",
+  forgotPassword
+);
+
+router.post(
+  "/reset-password",
+  resetPassword
+);
+
+router.post(
+  "/verify-reset-otp",
+  verifyResetOtp
 );
 
 export default router;
