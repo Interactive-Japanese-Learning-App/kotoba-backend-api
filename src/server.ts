@@ -8,6 +8,7 @@ import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import accountRoutes from "./routes/accountRoutes";
 import learningRoutes from "./routes/learningRoutes";
+import nihongoRoutes from "./routes/nihongoRoutes";
 
 // LOAD ENV
 dotenv.config();
@@ -15,11 +16,9 @@ dotenv.config();
 // EXPRESS APP
 const app = express();
 
-//
 // ==============================
 // MIDDLEWARE
 // ==============================
-//
 app.use(cors());
 
 app.use(express.json());
@@ -30,20 +29,16 @@ app.use(
   })
 );
 
-//
 // ==============================
 // ROOT ROUTE
 // ==============================
-//
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-//
 // ==============================
 // API ROUTES
 // ==============================
-//
 
 // AUTH
 app.use(
@@ -69,11 +64,15 @@ app.use(
   learningRoutes
 );
 
-//
+// NIHONGO
+app.use(
+  "/api/nihongo", 
+  nihongoRoutes
+);
+
 // ==============================
 // 404 HANDLER
 // ==============================
-//
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -81,11 +80,9 @@ app.use((req, res) => {
   });
 });
 
-//
 // ==============================
 // DATABASE CONNECTION
 // ==============================
-//
 const PORT =
   process.env.PORT || 5000;
 
