@@ -22,6 +22,9 @@ import {
 import {
   verifyAdmin,
 } from "../middlewares/verifyAdmin";
+import {
+  googleLogin,
+} from "../controllers/userController";
 
 const router = express.Router();
 
@@ -51,6 +54,12 @@ router.post(
 router.post(
   "/user/login",
   loginUser
+);
+
+// Google Login
+router.post(
+  "/user/google-login",
+  googleLogin
 );
 
 //

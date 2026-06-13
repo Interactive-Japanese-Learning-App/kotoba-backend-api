@@ -4,11 +4,89 @@ import jwt from "jsonwebtoken";
 
 import User from "../models/User";
 import { sendOtpEmail } from "../utils/sendOtp";
+import { OAuth2Client } from "google-auth-library";
 
 import {
   emailRegex,
   passwordRegex,
 } from "../utils/validators";
+
+// GOOGLE LOGIN
+// Inisialisasi Google Client menggunakan Web Client ID dari Google Cloud Console
+const googleClient = new OAuth2Client(process.env.GOOGLE_WEB_CLIENT_ID);
+
+//
+// GOOGLE LOGIN / REGISTER
+//
+export const googleLogin = async (req: Request, res: Response) => {
+  try {
+    const { idToken } = req.body;
+
+    if (!idToken) {
+      return res.status(400).json({
+        success: false,
+        message: "ID Token is required",
+      });
+    }
+
+    // 1. Verifikasi ID Token ke Google server
+    const ticket = await googleClient.verifyIdToken({
+      idToken,
+      audience: process.env.GOOGLE_WEB_CLIENT_ID, // Harus sama dengan client ID di backend
+    });
+
+    const payload = ticket.getPayload();
+    if (!payload || !payload.email) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Google token structure",
+      });
+    }
+
+    const { email } = payload;
+
+    // 2. Cari user di database berdasarkan email Google
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      // Jika user belum ada, buat user baru (Auto-verified karena dari Google)
+      // Password dikosongkan atau diisi random string karena login via Google tidak butuh password biasa
+      user = await User.create({
+        email,
+        password: "GOOGLE_AUTH_ACCOUNT_NO_PASSWORD",
+        isVerified: true, // Akun Google langsung aktif tanpa OTP
+      });
+    }
+
+    // 3. Generate JWT Token bawaan aplikasi kamu (menyamakan struktur login biasa)
+    const token = jwt.sign(
+      {
+        id: user._id,
+        role: "user",
+      },
+      process.env.JWT_SECRET!,
+      {
+        expiresIn: "7d",
+      }
+    );
+
+    return res.status(200).json({
+      success: true,
+      token,
+      user: {
+        _id: user._id,
+        email: user.email,
+      },
+    });
+
+  } catch (error) {
+    console.error("GOOGLE LOGIN ERROR:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Google authentication failed",
+    });
+  }
+};
 
 //
 // REGISTER USER
@@ -590,7 +668,7 @@ export const updateUser = async (
         req.params.id,
         updatedData,
         {
-          new: true,
+          returnDocument: 'after',
         }
       ).select("-password");
 
@@ -675,7 +753,7 @@ export const patchUser = async (
         req.params.id,
         updates,
         {
-          new: true,
+          returnDocument: 'after',
         }
       ).select("-password");
 
