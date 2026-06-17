@@ -9,6 +9,7 @@ import userRoutes from "./routes/userRoutes";
 import accountRoutes from "./routes/accountRoutes";
 import learningRoutes from "./routes/learningRoutes";
 import nihongoRoutes from "./routes/nihongoRoutes";
+import quizRoutes from "./routes/quizRoutes";
 
 // LOAD ENV
 dotenv.config();
@@ -70,6 +71,12 @@ app.use(
   nihongoRoutes
 );
 
+// Quiz
+app.use(
+  "/api/quiz",
+  quizRoutes
+);
+
 // ==============================
 // 404 HANDLER
 // ==============================
@@ -102,7 +109,8 @@ mongoose
   .then(() => {
 
     console.log(
-      "✅ MongoDB Connected"
+      "Database:",
+      mongoose.connection.db?.databaseName
     );
 
     app.listen(PORT, () => {
