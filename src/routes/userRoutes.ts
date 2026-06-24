@@ -13,6 +13,7 @@ import {
   resetPassword,
   verifyResetOtp,
   forgotPassword,
+  deleteOwnAccount,
 } from "../controllers/userController";
 
 import {
@@ -130,5 +131,8 @@ router.post(
   "/verify-reset-otp",
   verifyResetOtp
 );
-
+router.delete(
+  "/user/delete-account/:id",
+  deleteOwnAccount
+);
 export default router;

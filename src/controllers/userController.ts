@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/User";
 import { sendOtpEmail } from "../utils/sendOtp";
 import { OAuth2Client } from "google-auth-library";
+import ActivityLog from "../models/activityLog";
 
 import {
   emailRegex,
@@ -266,6 +267,39 @@ export const forgotPassword = async (
 
   }
 };
+export const deleteOwnAccount = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+
+    const user = await User.findByIdAndDelete(
+      req.params.id
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User tidak ditemukan",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Akun berhasil dihapus",
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+
+  }
+};
 export const verifyResetOtp = async (
   req: Request,
   res: Response
@@ -364,19 +398,23 @@ export const resetPassword = async (
         10
       );
 
-    user.password =
-      hashedPassword;
+    user.password = hashedPassword;
 
     user.otpCode = null;
-
     user.otpExpiredAt = null;
 
     await user.save();
 
+    await ActivityLog.create({
+      userId: user._id,
+      activityType: "reset_password",
+      title: "Reset Password",
+      detail: `${user.email} berhasil mengubah password`,
+    });
+
     return res.status(200).json({
       success: true,
-      message:
-        "Password berhasil diubah",
+      message: "Password berhasil diubah",
     });
 
   } catch (error) {
@@ -871,6 +909,13 @@ export const verifyOtp = async (
     user.otpExpiredAt = null;
 
     await user.save();
+
+    await ActivityLog.create({
+      userId: user._id,
+      activityType: "register",
+      title: "Registrasi Akun",
+      detail: `${user.email} berhasil membuat akun`,
+    });
 
     res.status(200).json({
       success: true,

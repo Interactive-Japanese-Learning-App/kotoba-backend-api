@@ -10,6 +10,7 @@ import accountRoutes from "./routes/accountRoutes";
 import learningRoutes from "./routes/learningRoutes";
 import nihongoRoutes from "./routes/nihongoRoutes";
 import quizRoutes from "./routes/quizRoutes";
+import activityLogRoutes from "./routes/activityRoutes";
 
 // LOAD ENV
 dotenv.config();
@@ -75,6 +76,12 @@ app.use(
 app.use(
   "/api/quiz",
   quizRoutes
+);
+
+// ACTIVITY LOG
+app.use(
+  "/api/activity",
+  activityLogRoutes
 );
 
 // ==============================
