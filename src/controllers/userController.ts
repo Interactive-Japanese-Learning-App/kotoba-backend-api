@@ -650,6 +650,46 @@ export const getUserById = async (
   }
 };
 
+// GET PROFILE //
+export const getProfile = async (
+  req: Request,
+  res: Response
+) => {
+
+  try {
+
+    const user = await User.findById(req.params.id)
+      .select("-password");
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User tidak ditemukan",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      user: {
+        _id: user._id,
+        email: user.email,
+        xp: user.xp,
+        level: user.level,
+      },
+    });
+
+  } catch (error) {
+
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+
+  }
+
+};
+
+
 //
 // UPDATE USER (PUT)
 //

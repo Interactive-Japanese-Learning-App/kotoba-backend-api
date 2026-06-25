@@ -9,7 +9,7 @@ export interface IUserQuizProgress
   userId: string;
 
   sectionId:
-    mongoose.Types.ObjectId;
+  mongoose.Types.ObjectId;
 
   currentQuestion: number;
 
@@ -39,6 +39,11 @@ const UserQuizProgressSchema =
         type: Boolean,
         default: false,
       },
+
+      completedQuestions: {
+        type: [Number],
+        default: [],
+      }
     },
     {
       timestamps: true,

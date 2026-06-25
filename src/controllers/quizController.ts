@@ -1,9 +1,11 @@
 import QuizSection from "../models/QuizSection";
 import QuizQuestion from "../models/QuizQuestion";
 import UserQuizProgress from "../models/UserQuizProgress";
+import User from "../models/User";
 
 export const getSections = async (req: any, res: any) => {
     try {
+
         const sections = await QuizSection.find()
             .sort({ order: 1 });
 
@@ -11,200 +13,233 @@ export const getSections = async (req: any, res: any) => {
             success: true,
             data: sections,
         });
+
     } catch (error) {
+
         res.status(500).json({
             success: false,
             message: "Gagal mengambil section",
             error,
         });
+
     }
 };
 
-export const getQuestionsBySection =
-    async (req: any, res: any) => {
-        try {
-            const { sectionId } = req.params;
+export const getQuestionsBySection = async (req: any, res: any) => {
+    try {
 
-            const questions =
-                await QuizQuestion.find({
-                    sectionId,
-                }).sort({ questionNo: 1 });
+        const { sectionId } = req.params;
 
-            res.status(200).json({
-                success: true,
-                data: questions,
-            });
-        } catch (error) {
-            res.status(500).json({
-                success: false,
-                message: "Gagal mengambil soal",
-                error,
-            });
-        }
-    };
+        const questions = await QuizQuestion.find({
+            sectionId,
+        }).sort({ questionNo: 1 });
 
-export const getProgress =
-    async (req: any, res: any) => {
+        res.status(200).json({
+            success: true,
+            data: questions,
+        });
 
-        try {
+    } catch (error) {
 
-            const {
-                userId,
-                sectionId
-            } = req.query;
+        res.status(500).json({
+            success: false,
+            message: "Gagal mengambil soal",
+            error,
+        });
 
-            let progress =
-                await UserQuizProgress.findOne({
-                    userId,
-                    sectionId,
-                });
+    }
+};
 
-            if (!progress) {
+export const getProgress = async (req: any, res: any) => {
 
-                progress =
-                    await UserQuizProgress.create({
-                        userId,
-                        sectionId,
-                        currentQuestion: 1,
-                        sectionCompleted: false,
-                    });
+    try {
 
-            }
+        const { userId, sectionId } = req.query;
 
-            res.status(200).json({
-                success: true,
-                data: progress,
-            });
+        let progress = await UserQuizProgress.findOne({
+            userId,
+            sectionId,
+        });
 
-        } catch (error) {
+        if (!progress) {
 
-            res.status(500).json({
-                success: false,
-                error,
-            });
-
-        }
-
-    };
-
-export const submitAnswer =
-    async (req: any, res: any) => {
-
-        try {
-
-            const {
+            progress = await UserQuizProgress.create({
                 userId,
                 sectionId,
-                questionNo,
-                answer,
-            } = req.body;
-
-            const question =
-                await QuizQuestion.findOne({
-                    sectionId,
-                    questionNo,
-                });
-
-            if (!question) {
-
-                return res.status(404).json({
-                    success: false,
-                    message:
-                        "Soal tidak ditemukan",
-                });
-
-            }
-
-            const isCorrect =
-                question.answer === answer;
-
-            if (!isCorrect) {
-
-                return res.status(200).json({
-                    success: true,
-                    correct: false,
-                });
-
-            }
-
-            let progress =
-                await UserQuizProgress.findOne({
-                    userId,
-                    sectionId,
-                });
-
-            if (!progress) {
-
-                progress =
-                    await UserQuizProgress.create({
-                        userId,
-                        sectionId,
-                        currentQuestion: 1,
-                    });
-
-            }
-
-            progress.currentQuestion =
-                questionNo + 1;
-
-            if (questionNo >= 5) {
-
-                progress.sectionCompleted =
-                    true;
-
-            }
-
-            await progress.save();
-
-            res.status(200).json({
-                success: true,
-                correct: true,
-                nextQuestion:
-                    progress.currentQuestion,
-                sectionCompleted:
-                    progress.sectionCompleted,
-            });
-
-        } catch (error) {
-
-            res.status(500).json({
-                success: false,
-                error,
+                currentQuestion: 1,
+                sectionCompleted: false,
+                completedQuestions: [],
             });
 
         }
 
-    };
+        res.status(200).json({
+            success: true,
+            data: progress,
+        });
 
-export const getRoadmapProgress =
-    async (req: any, res: any) => {
+    } catch (error) {
 
-        try {
+        res.status(500).json({
+            success: false,
+            error,
+        });
 
-            const { userId } = req.query;
+    }
 
-            const sections =
-                await QuizSection.find()
-                    .sort({ order: 1 });
+};
 
-            const progress =
-                await UserQuizProgress.find({
-                    userId,
-                });
+export const submitAnswer = async (req: any, res: any) => {
 
-            res.status(200).json({
-                success: true,
-                sections,
-                progress,
-            });
+    try {
 
-        } catch (error) {
+        const {
+            userId,
+            sectionId,
+            questionNo,
+            answer,
+        } = req.body;
 
-            res.status(500).json({
+        const question = await QuizQuestion.findOne({
+            sectionId,
+            questionNo,
+        });
+
+        if (!question) {
+            return res.status(404).json({
                 success: false,
-                error,
+                message: "Soal tidak ditemukan",
+            });
+        }
+
+        const isCorrect = question.answer === answer;
+
+        if (!isCorrect) {
+            return res.status(200).json({
+                success: true,
+                correct: false,
+            });
+        }
+
+        // =========================
+        // AMBIL PROGRESS USER
+        // =========================
+        let progress = await UserQuizProgress.findOne({
+            userId,
+            sectionId,
+        });
+
+        if (!progress) {
+
+            progress = await UserQuizProgress.create({
+                userId,
+                sectionId,
+                currentQuestion: 1,
+                sectionCompleted: false,
+                completedQuestions: [],
             });
 
         }
 
-    };
+        // =========================
+        // SUDAH PERNAH DIKERJAKAN?
+        // =========================
+        const alreadyCompleted =
+            progress.completedQuestions.includes(questionNo);
+
+        // simpan soal baru
+        if (!alreadyCompleted) {
+            progress.completedQuestions.push(questionNo);
+        }
+
+        // progress tidak boleh turun
+        progress.currentQuestion = Math.max(
+            progress.currentQuestion,
+            questionNo + 1
+        );
+
+        // jika semua soal selesai
+        if (progress.completedQuestions.length >= 5) {
+
+            progress.sectionCompleted = true;
+
+            // biar currentQuestion tidak menjadi 6
+            progress.currentQuestion = 5;
+
+        }
+
+        await progress.save();
+
+        // =========================
+        // TAMBAH XP USER
+        // HANYA JIKA SOAL BARU
+        // =========================
+        if (!alreadyCompleted) {
+
+            const user = await User.findById(userId);
+
+            if (user) {
+
+                // maksimal 100 xp
+                if (user.xp < 100) {
+
+                    user.xp += 20;
+
+                    if (user.xp > 100) {
+                        user.xp = 100;
+                    }
+
+                    user.level = Math.floor(user.xp / 100) + 1;
+
+                    await user.save();
+                }
+            }
+        }
+
+        return res.status(200).json({
+            success: true,
+            correct: true,
+            nextQuestion: progress.currentQuestion,
+            sectionCompleted: progress.sectionCompleted,
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            success: false,
+            error,
+        });
+
+    }
+
+};
+
+export const getRoadmapProgress = async (req: any, res: any) => {
+
+    try {
+
+        const { userId } = req.query;
+
+        const sections = await QuizSection.find()
+            .sort({ order: 1 });
+
+        const progress = await UserQuizProgress.find({
+            userId,
+        });
+
+        res.status(200).json({
+            success: true,
+            sections,
+            progress,
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            success: false,
+            error,
+        });
+
+    }
+
+};

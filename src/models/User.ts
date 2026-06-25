@@ -3,8 +3,7 @@ import mongoose, {
   Document,
 } from "mongoose";
 
-export interface IUser
-  extends Document {
+export interface IUser extends Document {
 
   email: string;
   password: string;
@@ -17,9 +16,12 @@ export interface IUser
 
   otpExpiredAt?: Date | null;
 
+  xp: number;
+
+  level: number;
+
   createdAt: Date;
   updatedAt: Date;
-
 }
 
 const UserSchema =
@@ -44,6 +46,7 @@ const UserSchema =
         default: "user",
         enum: ["user"],
       },
+
       isVerified: {
         type: Boolean,
         default: false,
@@ -58,7 +61,18 @@ const UserSchema =
         type: Date,
         default: null,
       },
+
+      xp: {
+        type: Number,
+        default: 0,
+      },
+
+      level: {
+        type: Number,
+        default: 1,
+      },
     },
+    
     {
       timestamps: true,
     }

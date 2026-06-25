@@ -5,6 +5,7 @@ import {
   loginUser,
   getUsers,
   getUserById,
+  getProfile,
   updateUser,
   patchUser,
   deleteUser,
@@ -68,6 +69,12 @@ router.post(
 // CRUD USER
 // ==============================
 //
+
+// Get profile
+router.get(
+  "/profile/:id",
+  getProfile
+);
 
 // Get All Users
 router.get(
