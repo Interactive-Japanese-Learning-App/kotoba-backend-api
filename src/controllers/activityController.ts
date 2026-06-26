@@ -9,17 +9,16 @@ export const createActivity = async (
     console.log("CREATE ACTIVITY");
     console.log(req.body);
 
-    const activity =
-      await ActivityLog.create(req.body);
+    const activity = await ActivityLog.create(req.body);
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       data: activity,
     });
   } catch (error) {
     console.log(error);
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Failed to create activity",
       error,
@@ -34,19 +33,20 @@ export const getActivities = async (
   try {
     const { userId } = req.params;
 
-    const activities =
-      await ActivityLog.find({
-        userId,
-      }).sort({
-        createdAt: -1,
-      });
+    const activities = await ActivityLog.find({
+      userId,
+    }).sort({
+      createdAt: -1,
+    });
 
-    res.json({
+    return res.status(200).json({
       success: true,
       data: activities,
     });
   } catch (error) {
-    res.status(500).json({
+    console.log(error);
+
+    return res.status(500).json({
       success: false,
       message: "Failed to get activities",
       error,

@@ -2,58 +2,58 @@ import QuizSection from "../models/QuizSection";
 import QuizQuestion from "../models/QuizQuestion";
 import UserQuizProgress from "../models/UserQuizProgress";
 import User from "../models/User";
+import ActivityLog from "../models/activityLog";
 
 export const getSections = async (req: any, res: any) => {
     try {
-
-        const sections = await QuizSection.find()
-            .sort({ order: 1 });
+        const sections = await QuizSection.find().sort({
+            order: 1,
+        });
 
         res.status(200).json({
             success: true,
             data: sections,
         });
-
     } catch (error) {
-
         res.status(500).json({
             success: false,
             message: "Gagal mengambil section",
             error,
         });
-
     }
 };
 
-export const getQuestionsBySection = async (req: any, res: any) => {
+export const getQuestionsBySection = async (
+    req: any,
+    res: any
+) => {
     try {
-
         const { sectionId } = req.params;
 
         const questions = await QuizQuestion.find({
             sectionId,
-        }).sort({ questionNo: 1 });
+        }).sort({
+            questionNo: 1,
+        });
 
         res.status(200).json({
             success: true,
             data: questions,
         });
-
     } catch (error) {
-
         res.status(500).json({
             success: false,
             message: "Gagal mengambil soal",
             error,
         });
-
     }
 };
 
-export const getProgress = async (req: any, res: any) => {
-
+export const getProgress = async (
+    req: any,
+    res: any
+) => {
     try {
-
         const { userId, sectionId } = req.query;
 
         let progress = await UserQuizProgress.findOne({
@@ -62,7 +62,6 @@ export const getProgress = async (req: any, res: any) => {
         });
 
         if (!progress) {
-
             progress = await UserQuizProgress.create({
                 userId,
                 sectionId,
@@ -70,29 +69,25 @@ export const getProgress = async (req: any, res: any) => {
                 sectionCompleted: false,
                 completedQuestions: [],
             });
-
         }
 
         res.status(200).json({
             success: true,
             data: progress,
         });
-
     } catch (error) {
-
         res.status(500).json({
             success: false,
             error,
         });
-
     }
-
 };
 
-export const submitAnswer = async (req: any, res: any) => {
-
+export const submitAnswer = async (
+    req: any,
+    res: any
+) => {
     try {
-
         const {
             userId,
             sectionId,
@@ -130,7 +125,6 @@ export const submitAnswer = async (req: any, res: any) => {
         });
 
         if (!progress) {
-
             progress = await UserQuizProgress.create({
                 userId,
                 sectionId,
@@ -138,7 +132,6 @@ export const submitAnswer = async (req: any, res: any) => {
                 sectionCompleted: false,
                 completedQuestions: [],
             });
-
         }
 
         // =========================
@@ -147,25 +140,18 @@ export const submitAnswer = async (req: any, res: any) => {
         const alreadyCompleted =
             progress.completedQuestions.includes(questionNo);
 
-        // simpan soal baru
         if (!alreadyCompleted) {
             progress.completedQuestions.push(questionNo);
         }
 
-        // progress tidak boleh turun
         progress.currentQuestion = Math.max(
             progress.currentQuestion,
             questionNo + 1
         );
 
-        // jika semua soal selesai
         if (progress.completedQuestions.length >= 5) {
-
             progress.sectionCompleted = true;
-
-            // biar currentQuestion tidak menjadi 6
             progress.currentQuestion = 5;
-
         }
 
         await progress.save();
@@ -175,14 +161,11 @@ export const submitAnswer = async (req: any, res: any) => {
         // HANYA JIKA SOAL BARU
         // =========================
         if (!alreadyCompleted) {
-
             const user = await User.findById(userId);
 
             if (user) {
-
-                // maksimal 100 xp
+                // maksimal 100 XP
                 if (user.xp < 100) {
-
                     user.xp += 20;
 
                     if (user.xp > 100) {
@@ -194,6 +177,17 @@ export const submitAnswer = async (req: any, res: any) => {
                     await user.save();
                 }
             }
+
+            // =========================
+            // SIMPAN ACTIVITY LOG
+            // =========================
+            await ActivityLog.create({
+                userId,
+                activityType: "quiz",
+                title: "Mengerjakan Kuis",
+                detail: `Berhasil menjawab soal nomor ${questionNo} - Pelafalan`,
+                score: 20,
+            });
         }
 
         return res.status(200).json({
@@ -202,26 +196,26 @@ export const submitAnswer = async (req: any, res: any) => {
             nextQuestion: progress.currentQuestion,
             sectionCompleted: progress.sectionCompleted,
         });
-
     } catch (error) {
+        console.log(error);
 
         res.status(500).json({
             success: false,
             error,
         });
-
     }
-
 };
 
-export const getRoadmapProgress = async (req: any, res: any) => {
-
+export const getRoadmapProgress = async (
+    req: any,
+    res: any
+) => {
     try {
-
         const { userId } = req.query;
 
-        const sections = await QuizSection.find()
-            .sort({ order: 1 });
+        const sections = await QuizSection.find().sort({
+            order: 1,
+        });
 
         const progress = await UserQuizProgress.find({
             userId,
@@ -232,14 +226,12 @@ export const getRoadmapProgress = async (req: any, res: any) => {
             sections,
             progress,
         });
-
     } catch (error) {
+        console.log(error);
 
         res.status(500).json({
             success: false,
             error,
         });
-
     }
-
 };
