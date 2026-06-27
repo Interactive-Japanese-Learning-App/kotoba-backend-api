@@ -48,17 +48,17 @@ export const googleLogin = async (req: Request, res: Response) => {
 
     // 2. Cari user di database berdasarkan email Google
     let user = await User.findOne({ email });
+    let isNewUser = false;
 
     if (!user) {
-      // Jika user belum ada, buat user baru (Auto-verified karena dari Google)
-      // Password dikosongkan atau diisi random string karena login via Google tidak butuh password biasa
+      isNewUser = true;
+
       user = await User.create({
         email,
         password: "GOOGLE_AUTH_ACCOUNT_NO_PASSWORD",
-        isVerified: true, // Akun Google langsung aktif tanpa OTP
+        isVerified: true,
       });
     }
-
     // 3. Generate JWT Token bawaan aplikasi kamu (menyamakan struktur login biasa)
     const token = jwt.sign(
       {
@@ -74,6 +74,7 @@ export const googleLogin = async (req: Request, res: Response) => {
     return res.status(200).json({
       success: true,
       token,
+      isNewUser,
       user: {
         _id: user._id,
         email: user.email,

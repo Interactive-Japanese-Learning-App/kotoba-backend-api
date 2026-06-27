@@ -16,6 +16,7 @@ export interface IActivityLog
     | "object_detection"
     | "profile"
     | "login"
+    | "login_google"
     | "logout"
     | "register"
     | "edit_profile"
@@ -51,6 +52,7 @@ const activityLogSchema =
           "object_detection",
           "profile",
           "login",
+          "login_google",
           "logout",
           "register",
           "edit_profile",
