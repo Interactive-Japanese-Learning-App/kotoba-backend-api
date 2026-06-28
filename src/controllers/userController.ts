@@ -44,12 +44,14 @@ export const googleLogin = async (req: Request, res: Response) => {
       });
     }
 
-    const { email } = payload;
+    const { email, picture, name } = payload;
 
     // 2. Cari user di database berdasarkan email Google
     let user = await User.findOne({ email });
     let isNewUser = false;
-
+    const highResPicture = picture
+      ? picture.replace(/=s\d+-c$/, "=s400-c")
+      : "";
     if (!user) {
       isNewUser = true;
 
@@ -57,7 +59,12 @@ export const googleLogin = async (req: Request, res: Response) => {
         email,
         password: "GOOGLE_AUTH_ACCOUNT_NO_PASSWORD",
         isVerified: true,
+        photoUrl: highResPicture
       });
+    }
+    if (highResPicture && user.photoUrl !== highResPicture) {
+      user.photoUrl = highResPicture;
+      await user.save();
     }
     // 3. Generate JWT Token bawaan aplikasi kamu (menyamakan struktur login biasa)
     const token = jwt.sign(
@@ -78,6 +85,7 @@ export const googleLogin = async (req: Request, res: Response) => {
       user: {
         _id: user._id,
         email: user.email,
+        photoUrl: user.photoUrl,
       },
     });
 
@@ -562,6 +570,7 @@ export const loginUser = async (
       user: {
         _id: user._id,
         email: user.email,
+        photoUrl: user.photoUrl,
       },
     });
 
@@ -674,6 +683,7 @@ export const getProfile = async (
       user: {
         _id: user._id,
         email: user.email,
+        photoUrl: user.photoUrl,
         xp: user.xp,
         level: user.level,
       },

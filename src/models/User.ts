@@ -7,6 +7,7 @@ export interface IUser extends Document {
 
   email: string;
   password: string;
+  photoUrl?: string;
 
   role: "user";
 
@@ -71,8 +72,12 @@ const UserSchema =
         type: Number,
         default: 1,
       },
+      photoUrl: {
+        type: String,
+        default: "",
+      },
     },
-    
+
     {
       timestamps: true,
     }
