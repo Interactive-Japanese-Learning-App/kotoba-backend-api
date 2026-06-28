@@ -11,6 +11,7 @@ import learningRoutes from "./routes/learningRoutes";
 import nihongoRoutes from "./routes/nihongoRoutes";
 import quizRoutes from "./routes/quizRoutes";
 import activityLogRoutes from "./routes/activityRoutes";
+import youtubeRoutes from "./routes/youtubeRoutes";
 
 // LOAD ENV
 dotenv.config();
@@ -68,7 +69,7 @@ app.use(
 
 // NIHONGO
 app.use(
-  "/api/nihongo", 
+  "/api/nihongo",
   nihongoRoutes
 );
 
@@ -83,7 +84,11 @@ app.use(
   "/api/activity",
   activityLogRoutes
 );
-
+// YOUTUBE
+app.use(
+  "/api/youtube",
+  youtubeRoutes
+);
 // ==============================
 // 404 HANDLER
 // ==============================
@@ -93,6 +98,7 @@ app.use((req, res) => {
     message: "Route not found",
   });
 });
+
 
 // ==============================
 // DATABASE CONNECTION
