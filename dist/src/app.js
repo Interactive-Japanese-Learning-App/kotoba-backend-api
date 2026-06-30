@@ -1,0 +1,31 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
+const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
+const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
+const accountRoutes_1 = __importDefault(require("./routes/accountRoutes"));
+const learningRoutes_1 = __importDefault(require("./routes/learningRoutes"));
+const nihongoRoutes_1 = __importDefault(require("./routes/nihongoRoutes"));
+const quizRoutes_1 = __importDefault(require("./routes/quizRoutes"));
+const activityRoutes_1 = __importDefault(require("./routes/activityRoutes"));
+const youtubeRoutes_1 = __importDefault(require("./routes/youtubeRoutes"));
+const app = (0, express_1.default)();
+app.use((0, cors_1.default)());
+app.use(express_1.default.json());
+app.use(express_1.default.urlencoded({ extended: true }));
+app.get("/", (req, res) => {
+    res.send("API is running...");
+});
+app.use("/api/auth", authRoutes_1.default);
+app.use("/api/users", userRoutes_1.default);
+app.use("/api/account", accountRoutes_1.default);
+app.use("/api/learning", learningRoutes_1.default);
+app.use("/api/nihongo", nihongoRoutes_1.default);
+app.use("/api/quiz", quizRoutes_1.default);
+app.use("/api/activity", activityRoutes_1.default);
+app.use("/api/youtube", youtubeRoutes_1.default);
+exports.default = app;

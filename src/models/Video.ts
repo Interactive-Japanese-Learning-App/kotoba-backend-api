@@ -6,10 +6,16 @@ const videoSchema = new mongoose.Schema(
     video_id: String,
     title: String,
     channel: String,
+
+    thumbnail: String,
+    video_url: String,
+
     published_at: Date,
+
     views: Number,
     likes: Number,
     comments: Number,
+
     score: Number,
     updated_at: Date,
   },
@@ -18,4 +24,7 @@ const videoSchema = new mongoose.Schema(
   }
 );
 
-export default bigdataDB.model("Video", videoSchema);
+export default bigdataDB.model(
+  "Video",
+  videoSchema
+);

@@ -5,12 +5,18 @@ const topChannelSchema = new mongoose.Schema(
   {
     channel_id: String,
     channel_name: String,
+
+    thumbnail: String,
+    channel_url: String,
+
     subscribers: Number,
     total_views: Number,
     total_videos: Number,
+
     score: Number,
-    updated_at: Date,
+
     published_at: Date,
+    updated_at: Date,
   },
   {
     collection: "top_channels",
