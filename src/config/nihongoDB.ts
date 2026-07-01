@@ -3,13 +3,12 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export const nihongoDB =
-  mongoose.createConnection(
-    process.env.MONGO_URI!,
-    {
-      dbName: "test",
-    }
-  );
+export const nihongoDB = mongoose.createConnection(
+  process.env.MONGO_URI!,
+  {
+    dbName: "kotoba",
+  }
+);
 
 nihongoDB.on("connected", () => {
   console.log(
