@@ -7,12 +7,13 @@ export const nihongoDB =
   mongoose.createConnection(
     process.env.MONGO_URI!,
     {
-      dbName: "kotoba",
+      dbName: "test",
     }
   );
 
 nihongoDB.on("connected", () => {
   console.log(
-    "✅ Nihongo DB Connected"
+    "Nihongo DB:",
+    nihongoDB.db?.databaseName
   );
 });
