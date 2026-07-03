@@ -277,3 +277,78 @@ export const deleteAccount = async (
 
   }
 };
+
+export const getUserGrowth = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { date } = req.query;
+
+    if (!date) {
+      return res.status(400).json({
+        success: false,
+        message: "Date is required",
+      });
+    }
+
+    const selectedDate = new Date(date as string);
+
+    // Cari hari Senin
+    const start = new Date(selectedDate);
+
+    const day = start.getDay();
+
+    const diff = day === 0 ? -6 : 1 - day;
+
+    start.setDate(start.getDate() + diff);
+    start.setHours(0, 0, 0, 0);
+
+    // Hari Minggu
+    const end = new Date(start);
+
+    end.setDate(end.getDate() + 6);
+    end.setHours(23, 59, 59, 999);
+
+    const users = await User.find({
+      createdAt: {
+        $gte: start,
+        $lte: end,
+      },
+    });
+
+    const result = [
+      { name: "Sen", Pendaftar: 0 },
+      { name: "Sel", Pendaftar: 0 },
+      { name: "Rab", Pendaftar: 0 },
+      { name: "Kam", Pendaftar: 0 },
+      { name: "Jum", Pendaftar: 0 },
+      { name: "Sab", Pendaftar: 0 },
+      { name: "Min", Pendaftar: 0 },
+    ];
+
+    users.forEach((user) => {
+      const day = user.createdAt.getDay();
+
+      const index = day === 0 ? 6 : day - 1;
+
+      result[index].Pendaftar++;
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: result,
+      week: {
+        start,
+        end,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};

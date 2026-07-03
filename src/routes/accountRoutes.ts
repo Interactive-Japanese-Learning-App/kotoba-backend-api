@@ -6,6 +6,7 @@ import {
   getAllAccounts,
   updateRole,
   deleteAccount,
+  getUserGrowth,
 } from "../controllers/accountController";
 
 import {
@@ -46,6 +47,13 @@ router.delete(
   verifyToken,
   verifyAdmin,
   deleteAccount
+);
+
+router.get(
+  "/user-growth",
+  verifyToken,
+  verifyAdmin,
+  getUserGrowth
 );
 
 export default router;

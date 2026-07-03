@@ -9,6 +9,7 @@ import nihongoRoutes from "./routes/nihongoRoutes";
 import quizRoutes from "./routes/quizRoutes";
 import activityLogRoutes from "./routes/activityRoutes";
 import youtubeRoutes from "./routes/youtubeRoutes";
+import activityRoutes from "./routes/activityRoutes";
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use("/api/nihongo", nihongoRoutes);
 app.use("/api/quiz", quizRoutes);
 app.use("/api/activity", activityLogRoutes);
 app.use("/api/youtube", youtubeRoutes);
+app.use("/api", activityRoutes);
 
 app.use((req, res) => {
   res.status(404).json({

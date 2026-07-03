@@ -97,7 +97,7 @@ export const sendOtpEmail = async (
         font-size:12px;
         color:#666;
       ">
-        © 2025 Kotoba Learning App
+        © 2026 Kotoba Learning App
       </div>
 
     </div>
