@@ -5,15 +5,10 @@ import {
 
 export interface INihongo
   extends Document {
-
   id: number;
-
   character: string;
-
   romaji: string;
-
   meaning: string;
-
   type: string;
 }
 

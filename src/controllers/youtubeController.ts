@@ -22,7 +22,7 @@ export const getYoutubeData = async (
 
     res.status(200).json({
       success: true,
-      message: "Youtube data retrieved successfully",
+      message: "Data YouTube berhasil diambil",
       data: {
         videos,
         channels,
@@ -35,7 +35,7 @@ export const getYoutubeData = async (
 
     res.status(500).json({
       success: false,
-      message: "Failed to retrieve youtube data"
+      message: "Gagal mengambil data YouTube"
     });
   }
 };

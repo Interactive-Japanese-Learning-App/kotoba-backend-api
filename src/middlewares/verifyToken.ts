@@ -27,7 +27,7 @@ export const verifyToken = (
 
       return res.status(401).json({
         success: false,
-        message: "No token provided",
+        message: "Tidak ada token yang diberikan",
       });
 
     }
@@ -48,7 +48,7 @@ export const verifyToken = (
 
     return res.status(401).json({
       success: false,
-      message: "Invalid token",
+      message: "Token tidak valid",
     });
 
   }

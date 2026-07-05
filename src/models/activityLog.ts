@@ -9,19 +9,19 @@ export interface IActivityLog
   userId: mongoose.Types.ObjectId;
 
   activityType:
-    | "quiz"
-    | "pronunciation"
-    | "kana_writing"
-    | "learning"
-    | "object_detection"
-    | "profile"
-    | "login"
-    | "login_google"
-    | "logout"
-    | "register"
-    | "edit_profile"
-    | "delete_account"
-    | "reset_password";
+  | "quiz"
+  | "pronunciation"
+  | "kana_writing"
+  | "learning"
+  | "object_detection"
+  | "profile"
+  | "login"
+  | "login_google"
+  | "logout"
+  | "register"
+  | "edit_profile"
+  | "delete_account"
+  | "reset_password";
 
   title: string;
 

@@ -6,7 +6,7 @@ dotenv.config();
 export const nihongoDB = mongoose.createConnection(
   process.env.MONGO_URI!,
   {
-    dbName: "kotoba",
+    dbName: "test",
   }
 );
 

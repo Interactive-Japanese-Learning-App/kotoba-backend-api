@@ -93,7 +93,7 @@ export const updateRole = async (
       return res.status(400).json({
         success: false,
         message:
-          "Role must be admin or user",
+          "Role harus berupa admin atau pengguna.",
       });
     }
 
@@ -112,7 +112,7 @@ export const updateRole = async (
         return res.status(404).json({
           success: false,
           message:
-            "User not found",
+            "Pengguna tidak ditemukan",
         });
       }
 
@@ -126,7 +126,7 @@ export const updateRole = async (
         return res.status(400).json({
           success: false,
           message:
-            "Already admin",
+            "Sudah menjadi admin",
         });
       }
 
@@ -144,7 +144,7 @@ export const updateRole = async (
       return res.status(200).json({
         success: true,
         message:
-          "Role updated to admin",
+          "Role diperbarui menjadi admin",
       });
     }
 
@@ -163,7 +163,7 @@ export const updateRole = async (
         return res.status(404).json({
           success: false,
           message:
-            "Admin not found",
+            "Admin tidak ditemukan",
         });
       }
 
@@ -177,7 +177,7 @@ export const updateRole = async (
         return res.status(400).json({
           success: false,
           message:
-            "Already user",
+            "Sudah menjadi pengguna",
         });
       }
 
@@ -195,7 +195,7 @@ export const updateRole = async (
       return res.status(200).json({
         success: true,
         message:
-          "Role updated to user",
+          "Role diperbarui menjadi pengguna",
       });
     }
 
@@ -237,7 +237,7 @@ export const deleteAccount = async (
       return res.status(200).json({
         success: true,
         message:
-          "Admin deleted",
+          "Admin dihapus",
       });
     }
 
@@ -256,14 +256,14 @@ export const deleteAccount = async (
       return res.status(200).json({
         success: true,
         message:
-          "User deleted",
+          "Pengguna dihapus",
       });
     }
 
     return res.status(404).json({
       success: false,
       message:
-        "Account not found",
+        "Akun tidak ditemukan",
     });
 
   } catch (error) {
@@ -288,7 +288,7 @@ export const getUserGrowth = async (
     if (!date) {
       return res.status(400).json({
         success: false,
-        message: "Date is required",
+        message: "Tanggal wajib diisi",
       });
     }
 

@@ -30,7 +30,7 @@ export const registerAdmin = async (
       return res.status(400).json({
         success: false,
         message:
-          "Email and password are required",
+          "Email dan kata sandi wajib diisi",
       });
     }
 
@@ -41,7 +41,7 @@ export const registerAdmin = async (
       return res.status(400).json({
         success: false,
         message:
-          "Invalid email format",
+          "Format email tidak valid",
       });
     }
 
@@ -52,7 +52,7 @@ export const registerAdmin = async (
       return res.status(400).json({
         success: false,
         message:
-          "Password must contain uppercase, lowercase, number, symbol and minimum 8 characters",
+          "Kata sandi harus memuat huruf besar, huruf kecil, angka, simbol, dan minimal 8 karakter",
       });
     }
 
@@ -66,7 +66,7 @@ export const registerAdmin = async (
       return res.status(400).json({
         success: false,
         message:
-          "Admin already exists",
+          "Admin sudah ada",
       });
     }
 
@@ -87,7 +87,7 @@ export const registerAdmin = async (
     res.status(201).json({
       success: true,
       message:
-        "Register success",
+        "Pendaftaran berhasil",
       admin: {
         _id: admin._id,
         email: admin.email,
@@ -130,7 +130,7 @@ export const loginAdmin = async (
       return res.status(400).json({
         success: false,
         message:
-          "Email and password are required",
+          "Email dan kata sandi wajib diisi",
       });
     }
 
@@ -144,7 +144,7 @@ export const loginAdmin = async (
       return res.status(404).json({
         success: false,
         message:
-          "Admin not found",
+          "Admin tidak ditemukan",
       });
     }
 
@@ -161,7 +161,7 @@ export const loginAdmin = async (
       return res.status(401).json({
         success: false,
         message:
-          "Invalid credentials",
+          "Kredensial tidak valid",
       });
     }
 
@@ -182,7 +182,7 @@ export const loginAdmin = async (
     res.status(200).json({
       success: true,
       message:
-        "Login success",
+        "Berhasil masuk",
       token,
       admin: {
         _id: admin._id,
@@ -301,7 +301,7 @@ export const updateAdmin = async (
         return res.status(400).json({
           success: false,
           message:
-            "Invalid email format",
+            "Format email tidak valid",
         });
       }
 
@@ -322,7 +322,7 @@ export const updateAdmin = async (
         return res.status(400).json({
           success: false,
           message:
-            "Password must contain uppercase, lowercase, number, symbol and minimum 8 characters",
+            "Kata sandi harus memuat huruf besar, huruf kecil, angka, simbol, dan minimal 8 karakter.",
         });
       }
 
@@ -346,14 +346,14 @@ export const updateAdmin = async (
       return res.status(404).json({
         success: false,
         message:
-          "Admin not found",
+          "Admin tidak ditemukan",
       });
     }
 
     res.status(200).json({
       success: true,
       message:
-        "Admin updated",
+        "Admin telah memperbarui",
       admin,
     });
 
@@ -395,7 +395,7 @@ export const patchAdmin = async (
         return res.status(400).json({
           success: false,
           message:
-            "Invalid email format",
+            "Format email tidak valid",
         });
       }
     }
@@ -413,7 +413,7 @@ export const patchAdmin = async (
         return res.status(400).json({
           success: false,
           message:
-            "Password must contain uppercase, lowercase, number, symbol and minimum 8 characters",
+            "Kata sandi harus memuat huruf besar, huruf kecil, angka, simbol, dan minimal 8 karakter.",
         });
       }
 
@@ -437,14 +437,14 @@ export const patchAdmin = async (
       return res.status(404).json({
         success: false,
         message:
-          "Admin not found",
+          "Admin tidak ditemukan",
       });
     }
 
     res.status(200).json({
       success: true,
       message:
-        "Admin patched",
+        "Admin telah melakukan perbaikan",
       admin,
     });
 
@@ -479,14 +479,14 @@ export const deleteAdmin = async (
       return res.status(404).json({
         success: false,
         message:
-          "Admin not found",
+          "Admin tidak ditemukan",
       });
     }
 
     res.status(200).json({
       success: true,
       message:
-        "Admin deleted",
+        "Admin telah dihapus",
     });
 
   } catch (error) {

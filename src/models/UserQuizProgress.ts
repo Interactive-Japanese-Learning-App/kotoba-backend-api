@@ -5,14 +5,10 @@ import mongoose, {
 
 export interface IUserQuizProgress
   extends Document {
-
   userId: string;
-
   sectionId:
   mongoose.Types.ObjectId;
-
   currentQuestion: number;
-
   sectionCompleted: boolean;
 }
 

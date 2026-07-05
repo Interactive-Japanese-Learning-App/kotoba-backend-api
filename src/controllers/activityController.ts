@@ -20,7 +20,7 @@ export const createActivity = async (
 
     return res.status(500).json({
       success: false,
-      message: "Failed to create activity",
+      message: "Gagal membuat aktivitas",
       error,
     });
   }
@@ -48,7 +48,7 @@ export const getActivities = async (
 
     return res.status(500).json({
       success: false,
-      message: "Failed to get activities",
+      message: "Gagal mendapatkan aktivitas",
       error,
     });
   }
@@ -132,7 +132,7 @@ export const getActivityStatistics = async (
 
     return res.status(500).json({
       success: false,
-      message: "Failed to get activity statistics",
+      message: "Gagal mendapatkan statistik aktivitas",
       error,
     });
   }

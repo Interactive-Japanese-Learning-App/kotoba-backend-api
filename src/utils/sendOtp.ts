@@ -1,26 +1,26 @@
 import nodemailer from "nodemailer";
 
 export const sendOtpEmail = async (
-    email: string,
-    otp: string
+  email: string,
+  otp: string
 ) => {
 
-    console.log("EMAIL_USER =", process.env.EMAIL_USER);
-    console.log("EMAIL_PASS =", process.env.EMAIL_PASS);
+  console.log("EMAIL_USER =", process.env.EMAIL_USER);
+  console.log("EMAIL_PASS =", process.env.EMAIL_PASS);
 
-    const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-            user: process.env.EMAIL_USER?.trim(),
-            pass: process.env.EMAIL_PASS?.trim(),
-        },
-    });
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER?.trim(),
+      pass: process.env.EMAIL_PASS?.trim(),
+    },
+  });
 
-    await transporter.sendMail({
-        from: `"Kotoba" <${process.env.EMAIL_USER}>`,
-        to: email,
-        subject: "Verifikasi Akun Kotoba",
-        html: `
+  await transporter.sendMail({
+    from: `"Kotoba" <${process.env.EMAIL_USER}>`,
+    to: email,
+    subject: "Verifikasi Akun Kotoba",
+    html: `
   <div style="
     font-family: Arial, sans-serif;
     background:#f5f7fb;
@@ -103,7 +103,7 @@ export const sendOtpEmail = async (
     </div>
   </div>
   `,
-    });
+  });
 
-    console.log("EMAIL BERHASIL DIKIRIM");
+  console.log("EMAIL BERHASIL DIKIRIM");
 };

@@ -8,19 +8,12 @@ export interface IUser extends Document {
   email: string;
   password: string;
   photoUrl?: string;
-
   role: "user";
-
   isVerified: boolean;
-
   otpCode?: string | null;
-
   otpExpiredAt?: Date | null;
-
   xp: number;
-
   level: number;
-
   createdAt: Date;
   updatedAt: Date;
 }

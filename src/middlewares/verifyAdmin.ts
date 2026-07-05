@@ -22,7 +22,7 @@ export const verifyAdmin = (
       return res.status(403).json({
         success: false,
         message:
-          "Access denied. Admin only",
+          "Akses ditolak. Hanya untuk admin.",
       });
 
     }

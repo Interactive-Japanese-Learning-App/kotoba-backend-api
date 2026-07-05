@@ -40,7 +40,7 @@ export const googleLogin = async (req: Request, res: Response) => {
     if (!payload || !payload.email) {
       return res.status(400).json({
         success: false,
-        message: "Invalid Google token structure",
+        message: "Struktur token Google tidak valid",
       });
     }
 
@@ -93,7 +93,7 @@ export const googleLogin = async (req: Request, res: Response) => {
     console.error("GOOGLE LOGIN ERROR:", error);
     return res.status(500).json({
       success: false,
-      message: "Google authentication failed",
+      message: "Autentikasi Google gagal",
     });
   }
 };
@@ -119,7 +119,7 @@ export const registerUser = async (
       return res.status(400).json({
         success: false,
         message:
-          "All fields are required",
+          "Semua kolom wajib diisi.",
       });
     }
 
@@ -127,7 +127,7 @@ export const registerUser = async (
       return res.status(400).json({
         success: false,
         message:
-          "Invalid email format",
+          "Format email tidak valid",
       });
     }
 
@@ -135,7 +135,7 @@ export const registerUser = async (
       return res.status(400).json({
         success: false,
         message:
-          "Password must contain uppercase, lowercase, number, symbol and minimum 8 characters",
+          "Kata sandi harus memuat huruf besar, huruf kecil, angka, simbol, dan minimal 8 karakter.",
       });
     }
 
@@ -148,7 +148,7 @@ export const registerUser = async (
       if (existingUser.isVerified) {
         return res.status(400).json({
           success: false,
-          message: "User already exists",
+          message: "Pengguna sudah ada",
         });
       }
 
@@ -239,7 +239,7 @@ export const forgotPassword = async (
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User tidak ditemukan",
+        message: "Pengguna tidak ditemukan",
       });
     }
 
@@ -289,7 +289,7 @@ export const deleteOwnAccount = async (
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User tidak ditemukan",
+        message: "Pengguna tidak ditemukan",
       });
     }
 
@@ -327,7 +327,7 @@ export const verifyResetOtp = async (
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User tidak ditemukan",
+        message: "Pengguna tidak ditemukan",
       });
     }
 
@@ -381,7 +381,7 @@ export const resetPassword = async (
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User tidak ditemukan",
+        message: "Pengguna tidak ditemukan",
       });
     }
     if (user.otpCode !== otp) {
@@ -418,12 +418,12 @@ export const resetPassword = async (
       userId: user._id,
       activityType: "reset_password",
       title: "Reset Password",
-      detail: `${user.email} berhasil mengubah password`,
+      detail: `${user.email} berhasil mengubah kata sandi`,
     });
 
     return res.status(200).json({
       success: true,
-      message: "Password berhasil diubah",
+      message: "Kata sandi berhasil diubah",
     });
 
   } catch (error) {
@@ -451,7 +451,7 @@ export const resendOtp = async (
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User tidak ditemukan",
+        message: "Pengguna tidak ditemukan",
       });
     }
 
@@ -517,7 +517,7 @@ export const loginUser = async (
       return res.status(400).json({
         success: false,
         message:
-          "Email and password are required",
+          "Email dan kata sandi wajib diisi.",
       });
     }
 
@@ -528,7 +528,7 @@ export const loginUser = async (
       return res.status(404).json({
         success: false,
         message:
-          "User not found",
+          "Pengguna tidak ditemukan",
       });
     }
     if (!user.isVerified) {
@@ -549,7 +549,7 @@ export const loginUser = async (
       return res.status(401).json({
         success: false,
         message:
-          "Invalid credentials",
+          "Kredensial tidak valid",
       });
     }
 
@@ -638,7 +638,7 @@ export const getUserById = async (
       return res.status(404).json({
         success: false,
         message:
-          "User not found",
+          "Pengguna tidak ditemukan",
       });
     }
 
@@ -674,7 +674,7 @@ export const getProfile = async (
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User tidak ditemukan",
+        message: "Pengguna tidak ditemukan",
       });
     }
 
@@ -723,7 +723,7 @@ export const updateUser = async (
         return res.status(400).json({
           success: false,
           message:
-            "Invalid email format",
+            "Format email tidak valid",
         });
       }
 
@@ -741,7 +741,7 @@ export const updateUser = async (
         return res.status(400).json({
           success: false,
           message:
-            "Password must contain uppercase, lowercase, number, symbol and minimum 8 characters",
+            "Kata sandi harus memuat huruf besar, huruf kecil, angka, simbol, dan minimal 8 karakter.",
         });
       }
 
@@ -765,14 +765,14 @@ export const updateUser = async (
       return res.status(404).json({
         success: false,
         message:
-          "User not found",
+          "Pengguna tidak ditemukan",
       });
     }
 
     res.status(200).json({
       success: true,
       message:
-        "User updated",
+        "Pengguna telah diperbarui",
       user,
     });
 
@@ -811,7 +811,7 @@ export const patchUser = async (
         return res.status(400).json({
           success: false,
           message:
-            "Invalid email format",
+            "Format email tidak valid",
         });
       }
     }
@@ -826,7 +826,7 @@ export const patchUser = async (
         return res.status(400).json({
           success: false,
           message:
-            "Password must contain uppercase, lowercase, number, symbol and minimum 8 characters",
+            "Kata sandi harus memuat huruf besar, huruf kecil, angka, simbol, dan minimal 8 karakter.",
         });
       }
 
@@ -850,14 +850,14 @@ export const patchUser = async (
       return res.status(404).json({
         success: false,
         message:
-          "User not found",
+          "Pengguna tidak ditemukan",
       });
     }
 
     res.status(200).json({
       success: true,
       message:
-        "User patched",
+        "Pengguna telah diperbarui",
       user,
     });
 
@@ -892,14 +892,14 @@ export const deleteUser = async (
       return res.status(404).json({
         success: false,
         message:
-          "User not found",
+          "Pengguna tidak ditemukan",
       });
     }
 
     res.status(200).json({
       success: true,
       message:
-        "User deleted",
+        "Pengguna telah dihapus",
     });
 
   } catch (error) {

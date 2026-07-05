@@ -7,7 +7,7 @@ import {
   submitAnswer,
   getRoadmapProgress,
 }
-from "../controllers/quizController";
+  from "../controllers/quizController";
 
 const router = express.Router();
 
