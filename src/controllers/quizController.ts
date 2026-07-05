@@ -177,17 +177,6 @@ export const submitAnswer = async (
                     await user.save();
                 }
             }
-
-            // =========================
-            // SIMPAN ACTIVITY LOG
-            // =========================
-            await ActivityLog.create({
-                userId,
-                activityType: "quiz",
-                title: "Mengerjakan Kuis",
-                detail: `Berhasil menjawab soal nomor ${questionNo} - Pelafalan`,
-                score: 20,
-            });
         }
 
         return res.status(200).json({
